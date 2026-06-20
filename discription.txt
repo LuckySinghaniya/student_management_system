@@ -18,6 +18,8 @@ To develop a console-based Student Management System in C++ that efficiently man
 
 ```cpp
 
+// ```
+
 // ## SAMPLE OUTPUT
 
 // ===== Student Management System =====
@@ -40,10 +42,8 @@ To develop a console-based Student Management System in C++ that efficiently man
 
 // ## Expected Outcome
 
-// The application successfully manages student records using file handling. Users can add, search, update, delete, and display student information.
-The data remains stored even after the program closes, ensuring reliable record management
+// The application successfully manages student records using file handling. Users can add, search, update, delete, and display student information. The data remains stored even after the program closes, ensuring reliable record management.
 
 // ## Conclusion
 
-// This project demonstrates the practical implementation of file handling, classes, functions, and menu-driven programming in C++.
-It provides a simple yet effective solution for maintaining student records and serves as a foundational project for learning database and management system concepts.
+// This project demonstrates the practical implementation of file handling, classes, functions, and menu-driven programming in C++. It provides a simple yet effective solution for maintaining student records and serves as a foundational project for learning database and management system concepts.
