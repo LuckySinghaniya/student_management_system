@@ -18,32 +18,213 @@ To develop a console-based Student Management System in C++ that efficiently man
 
 ```cpp
 
-// ## SAMPLE OUTPUT
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
 
-// ===== Student Management System =====
-// 1. Add Student
-// 2. Display Students
-// 3. Search Student
-// 4. Update Student
-// 5. Delete Student
-// 6. Exit
+class Student {
+public:
+    int rollNo;
+    string name;
+    int age;
+    string course;
 
-// Enter Choice: 1
+    void input() {
+        cout << "Enter Roll Number: ";
+        cin >> rollNo;
+        cin.ignore();
 
-// Enter Roll Number: 101
-// Enter Name: Lucky Singhaniya
-// Enter Age: 19
-// Enter Course: B.Tech CSE
+        cout << "Enter Name: ";
+        getline(cin, name);
 
-// Student Added Successfully!
-// ```
+        cout << "Enter Age: ";
+        cin >> age;
+        cin.ignore();
 
-// ## Expected Outcome
+        cout << "Enter Course: ";
+        getline(cin, course);
+    }
 
-// The application successfully manages student records using file handling. Users can add, search, update, delete, and display student information.
-The data remains stored even after the program closes, ensuring reliable record management
+    void display() {
+        cout << "\nRoll No : " << rollNo;
+        cout << "\nName    : " << name;
+        cout << "\nAge     : " << age;
+        cout << "\nCourse  : " << course << endl;
+    }
+};
 
-// ## Conclusion
+void addStudent() {
+    Student s;
+    ofstream file("students.txt", ios::app);
 
-// This project demonstrates the practical implementation of file handling, classes, functions, and menu-driven programming in C++.
-It provides a simple yet effective solution for maintaining student records and serves as a foundational project for learning database and management system concepts.
+    s.input();
+
+    file << s.rollNo << "|"
+         << s.name << "|"
+         << s.age << "|"
+         << s.course << endl;
+
+    file.close();
+
+    cout << "\nStudent Added Successfully!\n";
+}
+
+void displayStudents() {
+    ifstream file("students.txt");
+    string line;
+
+    cout << "\n----- Student Records -----\n";
+
+    while (getline(file, line)) {
+        cout << line << endl;
+    }
+
+    file.close();
+}
+
+void searchStudent() {
+    int roll;
+    cout << "Enter Roll Number to Search: ";
+    cin >> roll;
+
+    ifstream file("students.txt");
+    string line;
+    bool found = false;
+
+    while (getline(file, line)) {
+        int pos = line.find("|");
+        int fileRoll = stoi(line.substr(0, pos));
+
+        if (fileRoll == roll) {
+            cout << "\nRecord Found:\n";
+            cout << line << endl;
+            found = true;
+            break;
+        }
+    }
+
+    if (!found)
+        cout << "\nStudent Not Found!\n";
+
+    file.close();
+}
+
+void updateStudent() {
+    int roll;
+    cout << "Enter Roll Number to Update: ";
+    cin >> roll;
+
+    ifstream file("students.txt");
+    ofstream temp("temp.txt");
+
+    string line;
+    bool found = false;
+
+    while (getline(file, line)) {
+        int pos = line.find("|");
+        int fileRoll = stoi(line.substr(0, pos));
+
+        if (fileRoll == roll) {
+            Student s;
+            cout << "\nEnter New Details:\n";
+            s.input();
+
+            temp << s.rollNo << "|"
+                 << s.name << "|"
+                 << s.age << "|"
+                 << s.course << endl;
+
+            found = true;
+        } else {
+            temp << line << endl;
+        }
+    }
+
+    file.close();
+    temp.close();
+
+    remove("students.txt");
+    rename("temp.txt", "students.txt");
+
+    if (found)
+        cout << "\nRecord Updated Successfully!\n";
+    else
+        cout << "\nStudent Not Found!\n";
+}
+
+void deleteStudent() {
+    int roll;
+    cout << "Enter Roll Number to Delete: ";
+    cin >> roll;
+
+    ifstream file("students.txt");
+    ofstream temp("temp.txt");
+
+    string line;
+    bool found = false;
+
+    while (getline(file, line)) {
+        int pos = line.find("|");
+        int fileRoll = stoi(line.substr(0, pos));
+
+        if (fileRoll == roll) {
+            found = true;
+        } else {
+            temp << line << endl;
+        }
+    }
+
+    file.close();
+    temp.close();
+
+    remove("students.txt");
+    rename("temp.txt", "students.txt");
+
+    if (found)
+        cout << "\nRecord Deleted Successfully!\n";
+    else
+        cout << "\nStudent Not Found!\n";
+}
+
+int main() {
+    int choice;
+
+    do {
+        cout << "\n===== Student Management System =====\n";
+        cout << "1. Add Student\n";
+        cout << "2. Display Students\n";
+        cout << "3. Search Student\n";
+        cout << "4. Update Student\n";
+        cout << "5. Delete Student\n";
+        cout << "6. Exit\n";
+        cout << "Enter Choice: ";
+        cin >> choice;
+
+        switch(choice) {
+            case 1:
+                addStudent();
+                break;
+            case 2:
+                displayStudents();
+                break;
+            case 3:
+                searchStudent();
+                break;
+            case 4:
+                updateStudent();
+                break;
+            case 5:
+                deleteStudent();
+                break;
+            case 6:
+                cout << "\nThank You!\n";
+                break;
+            default:
+                cout << "\nInvalid Choice!\n";
+        }
+
+    } while(choice != 6);
+
+    return 0;
+}
